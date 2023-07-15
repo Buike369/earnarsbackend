@@ -1,0 +1,28 @@
+name: Main.js CI
+
+on:
+  push:
+    branches: [ deploy ]
+  pull_request:
+    branches: [ deploy ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+  
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    # - run: npm install express-rate-limit
+
+    
+    # - name: 'Restart server'
+    #   run: |
+    #       pm2 restart all
+         
+         
+
+         
+          
