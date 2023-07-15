@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const authRoutes = require('./routes/auth.js')
 const postRoutes = require('./routes/posts.js')
 const userRoutes = require('./routes/users.js')
+const paymentRoutes = require('./routes/flutterwaves.js')
 const { runJob } = require('./controllers/user.js')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
@@ -23,10 +25,11 @@ app.use((req,res,next)=>{
 app.use("/api/auth",authRoutes)
 app.use("/api/user",userRoutes)
 app.use("/api/post",postRoutes)
+app.use("/api/flutterwave", paymentRoutes)
 
 
 app.listen(port,()=>{
-    console.log(`Server running on port ${port}`)
-
+    console.log(`Server running on port ${port}`);
+ 
     runJob
 })

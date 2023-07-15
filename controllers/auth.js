@@ -33,19 +33,19 @@ function generateReferralCode(length) {
 
 const register1 =async(req,res)=>{
 
-    const checkV = req.body[1]
-    console.log(checkV.length)
-    
+    const checkV = req.body[1].code;
          // CHECK EXISTING USER
         const email = req.body[0].email;
     const p2 = validator.validate(`${email}`)
    const name = req.body[0].username;
     const referralCode = generateReferralCode(8);
-    console.log(referralCode)
+   
     if(p2 === true){
      const q = "SELECT * FROM users WHERE email = ?"
-     db.query(q,[email,name],async(err,data)=>{
-         if(err) return(res.json(err))
+     db.query(q,[email],async(err,data)=>{
+         if(err){
+            return res.status(500).json({err:err})
+         }
          if(data.length) return res.status(409).json('User already exist')
      })
 
@@ -60,42 +60,38 @@ const register1 =async(req,res)=>{
          if(err){
             console.log(err)
         }else{
-               (res.send(data))
+              
+             const fara = `SELECT  id AS id_referral FROM users WHERE referral_code = '${checkV}'`
+             db.query(fara, (err, data) => {
+                 if (err) {
+                     console.log(err)
+                 } else {
+
+                     const tap = data[0].id_referral;
+                     const fara1 = `SELECT  id AS id_referred FROM users WHERE email = '${req.body[0].email}'`
+                     db.query(fara1, (err, data) => {
+                         if (err) {
+                             console.log(err)
+                         } else {
+                             //  tap = res.send(data)
+                             const tap1 = data[0].id_referred;
+                             const fara2 = `INSERT INTO referrals(referral_user_id,referred_user_id) VALUES ('${tap}', '${tap1}')`
+
+                             db.query(fara2,(err, data) => {
+                                 if (err) {
+                                     console.log(err)
+                                 } else {
+                                     res.send("data inserted")
+                                 }
+                             })
+                         }
+                     })
+                 }
+             })
              
         }
      })
 
-      var tap;
-    var tap1;
-    const fara = `SELECT  id AS id_referral FROM users WHERE referral_code = '${checkV}'`
-    db.query(fara,(err,data)=>{
-        if(err){
-            console.log(err)
-        }else{
-        //  tap = res.send(data)
-            tap = data[0].id_referral;
-            console.log(tap)
-            const fara1 = `SELECT  id AS id_referred FROM users WHERE email = '${req.body[0].email}'`
-            db.query(fara1, (err, data) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    //  tap = res.send(data)
-                    tap1 = data[0].id_referred;
-                    console.log(tap1)
-                    const fara2 = `INSERT INTO referrals(referral_user_id,referred_user_id) VALUES ('${tap}', '${tap1}')`
-
-    db.query(fara2,(err,data)=>{
-        if(err){
-            console.log(err)
-        }else{
-            res.send("data inserted")
-        }
-    })
-                }
-            })
-        }
-    })
 
 }else{
     res.status(401).json({
@@ -107,35 +103,24 @@ const register1 =async(req,res)=>{
     const register = async (req, res) => {
    // CHECK EXISTING USER
    const email = req.body.email;
-
    const p1 = validator.validate(`${email}`)
    const name = req.body.username;
     const referralCode = generateReferralCode(8);
-
         if (p1 === true) {
      const q = "SELECT * FROM users WHERE email = ?"
-    
-     db.query(q,[email,name],async(err,data)=>{
+     db.query(q,[email],async(err,data)=>{
          if(err) return(res.status(501).json({msg:err}))
          if(data.length) return res.status(409).json('User already exist')
-
-     
      })
-    
-
      // Hash the password and create a user
-
      const salt = await  bcrypt.genSalt(10);
      const hash = await bcrypt.hash(req.body.password,salt);
-
      const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
 
     const values = [req.body.username, req.body.email, hash, referralCode]
      db.query(qa,[values],(err,data)=>{
          if(err) return res.status(501).json({msg:err})
-
         return res.status(200).json('user has been created')
-
 
      })
 
@@ -144,60 +129,21 @@ const register1 =async(req,res)=>{
             msg:"email is not valid"
         })
     }
-
-
-
 }
-// const login = (req, res) => {
-//     // CHECK USER
-//     //CHECK FOR PASSWORD
-//     // const isPasswordCorrect = bcrypt.compareSync(req.body.password, data[0].password);
-//  const email = req.body.email;
 
-//     console.log(email)
-
-    // const q = "SELECT * FROM users WHERE username = ? AND password = ?"
-
-
-       
-    //     db.query(q, [username,isPasswordCorrect], (err, data) => {
-    //         if (err) return res.json(err);
-    //         if (data.length > 0){
-    //                   res.send(data)
-    //         } else{
-    //             return res.status(404).json('user not found!')}
-
-
-
-        // if (!isPasswordCorrect) return res.status(400).json("Wrong username or Password!")
-        // const token = jwt.sign({ id: data[0].id }, "jwtkey")
-        // const { password, ...other } = data[0];
-
-        // res.cookie("access_token", token, { httpOnly: true }).status(200).json(other)
-
-    // })
-
-// }
 
 const login = async(req,res)=>{
     // CHECK USER
    const q = "SELECT * FROM users WHERE email = ?"
-
- 
    db.query(q,[req.body.email],async(err,data)=>{
        if (err) return res.status(500).json({ msg: 'Internal server error' });
        if(data.length === 0) return res.status(404).json({msg:"user not found"});
 
        //CHECK FOR PASSWORD
        const isPasswordCorrect = await bcrypt.compare(req.body.password,data[0].password);
-      
-      
-      
-
        if (!isPasswordCorrect) return res.status(400).json({ msg:"Wrong email or Password!"})
        const token = jwt.sign({id: data[0].id},"jwtkey")
        const {password, ...other} = data[0];
-
        res.cookie("access_token",token,{httpOnly:true}).status(200).json(other)
 
    })
@@ -232,13 +178,6 @@ const forgotPassword =(req,res)=>{
             res.status(404).json({ msg: 'User not found' });
         } else {
             const token1 = generateReferralCode(8);
-            // const resetLink = `http://localhost:3000/reset-password/${token}`;
-
-            // db.query("UPDATE users SET toke = ? WHERE email = ?",[token1,email1], (err) => {
-            //     if (err) {
-            //         console.log(err);
-            //         res.status(501).json({ message: 'Internal server error' });
-            //     } else {
                     const mailOptions = {
                         from:EMAIL,
                         to: email1,
@@ -288,13 +227,17 @@ const resetPassword =async(req,res)=>{
     const hash = await bcrypt.hash(req.body.password, salt);
     const pal = req.params.id
 
+    // console.log(req.body)
+
             const peo = `UPDATE users SET  password = "${hash}" WHERE email ="${pal}"`
-            db.query(peo, (err, result) => {
+            db.query(peo, async(err, result) => {
                 if (err) {
-                    res.status(500).json({
-                        err:err
-                    })
+                    // res.status(500).json({
+                    //     err:err
+                    console.log(err)
+                    // })
                 } else {
+                    console.log("success")
                     res.status(201).json({ msg: "Successful Update" })
                 }
             })
