@@ -2,9 +2,9 @@ name: Main.js CI
 
 on:
   push:
-    branches: [ deploy ]
+    branches: [ production ]
   pull_request:
-    branches: [ deploy ]
+    branches: [ production ]
 
 jobs:
   build:
