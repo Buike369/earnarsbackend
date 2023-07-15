@@ -1,0 +1,33 @@
+name: Main.js CI
+
+on:
+  push:
+    branches: [ production ]
+  pull_request:
+    branches: [ production ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+  
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    # - run: npm install express-rate-limit
+
+    - name: "Delete nodemodules"
+      run: | 
+          rm -rf node_modules/
+    - name: "Delete nodemodules"
+      run: | 
+          npm update 
+    - name: 'Restart server'
+      run: |
+          pm2 restart eBack
+         
+         
+
+         
+          
