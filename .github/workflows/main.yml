@@ -17,7 +17,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
     # - run: npm install express-rate-limit
 
-    
+    - name: "Delete nodemodules"
+      run: | 
+          rm -rf node_modules/
+    - name: "Delete nodemodules"
+      run: | 
+          npm update 
     - name: 'Restart server'
       run: |
           pm2 restart eBack
