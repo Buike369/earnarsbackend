@@ -109,8 +109,11 @@ const register1 =async(req,res)=>{
         if (p1 === true) {
      const q = "SELECT * FROM users WHERE email = ?"
      db.query(q,[email],async(err,data)=>{
-         if(err) return(res.status(501).json({msg:err}))
-         if(data.length) return res.status(409).json('User already exist')
+         if(err){
+            return(res.status(501).json({msg:err}))
+        }
+         if(data.length){
+            return res.status(409).json('User already exist')}
      })
      // Hash the password and create a user
      const salt = await  bcrypt.genSalt(10);
@@ -119,8 +122,14 @@ const register1 =async(req,res)=>{
 
     const values = [req.body.username, req.body.email, hash, referralCode]
      db.query(qa,[values],(err,data)=>{
-         if(err) return res.status(501).json({msg:err})
-        return res.status(200).json('user has been created')
+         if(err){
+            return res.status(501).json({msg:err})
+        }else{
+             return res.status(200).json('user has been created')
+
+         }
+
+      
 
      })
 
@@ -131,6 +140,10 @@ const register1 =async(req,res)=>{
     }
 }
 
+const adminRegister =(req,res)=>{
+  
+
+}
 
 const login = async(req,res)=>{
     // CHECK USER
@@ -253,4 +266,4 @@ const logout = (req,res)=>{
     
 }
 
-module.exports = { register, resetPassword, register1, login, logout, forgotPassword }
+module.exports = { register, adminRegister, resetPassword, register1, login, logout, forgotPassword }
