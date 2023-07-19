@@ -5,7 +5,7 @@ const mysql = require('mysql')
     host:"localhost",
     user:"betproject",
     password:"Kingsley369",
-    // database:"betproject" 
+    database:"betproject" 
 
 })
 module.exports = {db}
