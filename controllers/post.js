@@ -4,36 +4,27 @@ const {db} = require("../db.js")
 const jwt = require('jsonwebtoken') 
   
   const getPosts = (req,res)=>{
- 
     const q =  "SELECT * FROM users";
-
     db.query(q,(err,data)=>{
-      if (err) return res.send(err)
-
-      return (
-        // res.status(200).json(data);
-        res.send(data))
+      if (err){return res.status(501).json(err)
+      }else{
+        return (res.send(data))
+      }
     })
 }
 
 const getPost=(req,res)=>{
-
   const q =  "SELECT * FROM sportsTable";
-
   db.query(q,(err,data)=>{
-    if (err) return res.send(err)
-
-    return (
-      // res.status(200).json(data);
-      res.send(data))
-    
+    if (err) {return res.send(err)
+    }else{
+      return (res.send(data))
+    } 
   })
  }
 
   const getTipFprex =(req,res)=>{
-
     const forexT = "SELECT * FROM post_tip_for"
-
     db.query(forexT,(err,data)=>{
       if(err){
         return res.json({
@@ -47,9 +38,7 @@ const getPost=(req,res)=>{
 
 
 const getTipCrypto = (req, res) => {
-
   const cryptoT = `SELECT * FROM post_tip_crypto WHERE c_trade_type = "hourly"`
-
   db.query(cryptoT, (err, data) => {
     if (err) {
       return res.json({
@@ -61,9 +50,7 @@ const getTipCrypto = (req, res) => {
   })
 }
 const getTipCryptoD = (req, res) => {
-
   const cryptoT = `SELECT * FROM post_tip_crypto WHERE c_trade_type = "daily"`
-
   db.query(cryptoT, (err, data) => {
     if (err) {
       return res.json({
@@ -76,9 +63,7 @@ const getTipCryptoD = (req, res) => {
 }
 
 const getTipCryptoM = (req, res) => {
-
   const cryptoT = `SELECT * FROM post_tip_crypto WHERE c_trade_type = "weekly"`
-
   db.query(cryptoT, (err, data) => {
     if (err) {
       return res.json({
@@ -89,12 +74,14 @@ const getTipCryptoM = (req, res) => {
     }
   })
 }
+
  const getNum=()=>{
    const q ="SELECT COUNT(id) FROM user";
    db.query(q,(err,data)=>{
-     if(err) return console.log(err)
-
-     return res.send(data)
+     if(err) {return console.log(err)
+    }else{
+      return res.send(data)
+    }
    })
  }
 
@@ -134,12 +121,9 @@ const getPostMid = (req, res) => {
 
 
  const addPost1=(req,res)=>{
-  // console.log(req.body)
-
    const spots = "INSERT INTO post_tip_for(pair,condition,entry,take_profit,stop_loss,take_profit_no,stop_loss_no,trade_type) VALUES ?"
 
   const vale = req.body[0].map((app)=>([`${app.todo.pair}`,`${app.todo.condition}`,`${app.todo.entry}`,`${app.todo.takeProfit}`,`${app.todo.stopLoss}`,`${app.todo.TP_no_Of_Pips}`,`${app.todo.SL_no_Of_Pips}`,`${req.body[1].tradeType}`]))
-  console.log(vale)
 
   db.query(spots,[vale],(err,data)=>{
     if (err) return console.log(err)
@@ -163,8 +147,6 @@ const addCrypto = (req, res) => {
   const val = req.body[0].map((app) => ([
     `${app.todo.pair}`, `${app.todo.condition}`, `${app.todo.entry}`, `${app.todo.takeProfit}`, `${app.todo.stopLoss}`, `${app.todo.Tp_No_Of_Pips}`, `${app.todo.Sl_No_Of_Pips}`,`${req.body[1].tradeType}`
   ]))
-  // console.log(val)
-
   db.query(spot, [val], (err, data) => {
     if (err) return console.log(err)
 
@@ -191,49 +173,33 @@ const addBinary = (req, res) => {
 }
 
  const addPost2=(req,res)=>{
-
   const mike = "INSERT INTO post_result_sport(game_no,daily_profit,odd,action) VALUES (?)"
    const pips = req.body[1].earned ||req.body[2].loss
    const values1 = [req.body[0].gameNo,req.body[0].dailyProfit,req.body[0].odd,pips]
-  console.log(values1)
-
 
   db.query(mike,[values1],(err,data)=>{
-    if(err) return console.log(err)
-
+    if (err){  return console.log(err)
+  }else{
     return console.log('user has been created')
+
+  }
+
 
   })
  }
 
 
  const updatePost =  (req,res)=>{
-
   const regId = req.params.id;
-
-   console.log(regId)
-  // const pa = "UPDATE users SET username = (?),email = (?), password = (?),phone_number = (?),country = (?) WHERE id = (?)"
- 
-  //  const salt = await bcrypt.genSalt(10);
-  //  const hash = await bcrypt.hash(req.body.password, salt);
-
    const pa = `UPDATE users SET  phone_number = '${req.body.phoneNumber}',country = '${req.body.country}' WHERE id = '${regId}'`
-
- console.log(req.body)
 
   db.query(pa,(err,data)=>{
     if(err){ return console.log(err)
     }else{
-  
-      // const token = jwt.sign({ id: data[0].id }, "jwtkey")
-      // const { password, ...other } = data[0];
-      // res.cookie("access_token", token, { httpOnly: true }).status(200).json(other)
-    // return res.json('Books has been Update successFully')
      res.send(data)
     console.log("update successful")}
 
   })
-
  }
 
 
@@ -243,9 +209,6 @@ const addBinary = (req, res) => {
  const getById =(req,res)=>{
 
   const regId = req.params.id;
-
-  
-
   const pa = "SELECT *  FROM users (`username` = ?,`email` = ?, `password` = ?, `country` = ?,`phoneNumber` = ?) WHERE id = ? "
 
   // const valem = [

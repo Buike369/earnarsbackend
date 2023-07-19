@@ -280,7 +280,7 @@ const getActiveUser1 = (req, res) => {
             console.log(err)
         } else {
             res.json(result)
-            // console.log(result[0].active_count)
+           
         }
 
     })
@@ -401,8 +401,6 @@ const getGameNo3 = (req, res) => {
 const DeleteGame = (req, res) => {
     const gameId = req.params.id
 
-    console.log(gameId)
-
     const bod = "DELETE FROM post_tip_sport WHERE id = ?"
     db.query(bod, [gameId], (err, result) => {
         if (err) {
@@ -416,8 +414,6 @@ const DeleteGame = (req, res) => {
 
 const DeleteGame1 = (req, res) => {
     const gameId = req.params.id
-
-    console.log(gameId)
 
     const bod = "DELETE FROM post_tip_for WHERE id = ?"
     db.query(bod, [gameId], (err, result) => {
@@ -434,8 +430,6 @@ const DeleteGame1 = (req, res) => {
 const DeleteGame2 = (req, res) => {
     const gameId = req.params.id
 
-    console.log(gameId)
-
     const bod = "DELETE FROM post_tip_crypto WHERE id = ?"
     db.query(bod, [gameId], (err, result) => {
         if (err) {
@@ -449,7 +443,7 @@ const DeleteGame2 = (req, res) => {
 const DeleteGame3 = (req, res) => {
     const gameId = req.params.id
 
-    console.log(gameId)
+ 
 
     const bod = "DELETE FROM post_tip_binary WHERE id = ?"
     db.query(bod, [gameId], (err, result) => {
