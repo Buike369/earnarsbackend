@@ -115,7 +115,7 @@ const register1 =async(req,res)=>{
             return(res.status(501).json({msg:err}))
         }
          if(data.length){
-            return res.status(409).json('User already exist')}
+            return res.send('User already exist')}
      })
      // Hash the password and create a user
      const salt = await  bcrypt.genSalt(10);
