@@ -127,8 +127,7 @@ const register1 =async(req,res)=>{
          if(err){
             return res.status(502).json({msg:err})
         }else{
-             return res.send('user has been created')
-
+             res.send("user has been created")
          }
      })
 
