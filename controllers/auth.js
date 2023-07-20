@@ -100,6 +100,8 @@ const register1 =async(req,res)=>{
 }
 
 }
+
+
     const register = async (req, res) => {
    // CHECK EXISTING USER
    const email = req.body.email;
@@ -125,12 +127,9 @@ const register1 =async(req,res)=>{
          if(err){
             return res.status(501).json({msg:err})
         }else{
-             return res.status(200).json('user has been created')
+             return res.send('user has been created')
 
          }
-
-      
-
      })
 
     }else{
