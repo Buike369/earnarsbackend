@@ -106,7 +106,7 @@ const register1 =async(req,res)=>{
    // CHECK EXISTING USER
    const email = req.body.email;
    const p1 = validator.validate(`${email}`)
-   const name = req.body.username;
+
     const referralCode = generateReferralCode(8);
         if (p1 === true) {
      const q = "SELECT * FROM users WHERE email = ?"
@@ -124,7 +124,7 @@ const register1 =async(req,res)=>{
 
     const values = [req.body.username, req.body.email, hash, referralCode]
      db.query(qa,[values],(err,data)=>{
-         if(err)return res.status(502).json({msg:err})
+         if(err)return res.status(500).json(err)
         
          return res.send("user has been created")
          
