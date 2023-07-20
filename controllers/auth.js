@@ -124,11 +124,10 @@ const register1 =async(req,res)=>{
 
     const values = [req.body.username, req.body.email, hash, referralCode]
      db.query(qa,[values],(err,data)=>{
-         if(err){
-            return res.status(502).json({msg:err})
-        }else{
-             res.send("user has been created")
-         }
+         if(err)return res.status(502).json({msg:err})
+        
+         return res.send("user has been created")
+         
      })
 
     }else{
