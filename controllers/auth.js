@@ -206,7 +206,7 @@ const forgotPassword =(req,res)=>{
 <h1 style={{marginBottom:"10px"}}>Reset password</h1>
 <p style={{marginBottom:"20px"}}>A password change has been requested for your account. If this was you, please use the link below to reset your password.</p>
 
-<a href ="http://localhost:3000/resetpassword/${email1}" style={{padding:"8px 5px",background:"green",color:"#fff"}}>Reset password</a>
+<a href ="https://earnars.com/resetpassword/${email1}" style={{padding:"8px 5px",background:"green",color:"#fff"}}>Reset password</a>
 </body>
 </ > `
                     };
