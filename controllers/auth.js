@@ -114,23 +114,25 @@ const register = async (req, res) => {
             }
             if (data.length) {
                 return res.send('User already exist')
+            }else{
+                // Hash the password and create a user
+                const salt = await bcrypt.genSalt(10);
+                const hash = await bcrypt.hash(req.body.password, salt);
+                const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
+
+                const values = [req.body.username, req.body.email, hash, referralCode]
+                db.query(qa, [values], (err, data) => {
+                    if (err) {
+                        console.error(err)
+                    } else {
+                        console.log("user has been created")
+                    }
+
+
+                })
             }
         })
-        // Hash the password and create a user
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(req.body.password, salt);
-        const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
-
-        const values = [req.body.username, req.body.email, hash, referralCode]
-        db.query(qa, [values], (err, data) => {
-            if (err) {
-                console.error(err)
-            } else {
-                console.log("user has been created")
-            }
-
-
-        })
+        
 
     } else {
         res.status(402).json({
