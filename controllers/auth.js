@@ -108,13 +108,14 @@ const register = async (req, res) => {
     const referralCode = generateReferralCode(8);
     if (p1 === true) {
         const q = "SELECT * FROM users WHERE email = ?"
-        db.query(q, [email], async (err, data) => {
+        db.query(q, [email], async (err,data) => {
             if (err) {
                 console.error(err)
             }
-            if (data.length) {
+            if (data.length > 0){
                 return res.send('User already exist')
-            }else{
+            }
+            
                 // Hash the password and create a user
                 const salt = await bcrypt.genSalt(10);
                 const hash = await bcrypt.hash(req.body.password, salt);
@@ -130,7 +131,7 @@ const register = async (req, res) => {
 
 
                 })
-            }
+            
         })
         
 
