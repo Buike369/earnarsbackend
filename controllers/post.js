@@ -111,7 +111,8 @@ const getPostMid = (req, res) => {
   const q =  `SELECT * FROM post_result_sport `;
   
   db.query(q,(err,data)=>{
-    if (err) return res.json(err)
+    if (err){
+      console.error(err)}
     return (
       // res.status(200).json(data);
       res.send(data))
@@ -351,9 +352,7 @@ const addBinary = (req, res) => {
     const fip = "SELECT * FROM post_result_crypto"
        db.query(fip,(err,data)=>{
            if(err){
-            return res.status(401).json({
-              err:err
-            })
+           console.error(err)
            }else{
             res.send(data)
            }
@@ -365,10 +364,8 @@ const addBinary = (req, res) => {
      const fip1= "SELECT * FROM post_result_binary"
      db.query(fip1, (err, data) => {
        if (err) {
-         return res.status(401).json({
-           err: err
-         })
-       } else {
+        console.error(err)
+       } else{
          res.send(data)
        }
      })
