@@ -44,9 +44,9 @@ const register1 = async (req, res) => {
         const q = "SELECT * FROM users WHERE email = ?"
         db.query(q, [email], async (err, data) => {
             if (err) {
-                return res.status(500).json({ err: err })
+               console.error(err)
             }
-            if (data.length) return res.status(409).json('User already exist')
+            if (data.length > 0) return res.status(409).json({message:'User already exist'})
         })
 
         // Hash the password and create a user
@@ -64,17 +64,16 @@ const register1 = async (req, res) => {
                 const fara = `SELECT  id AS id_referral FROM users WHERE referral_code = '${checkV}'`
                 db.query(fara, (err, data) => {
                     if (err) {
-                        console.log(err)
+                        console.error(err)
                     } else {
-
-                        const tap = data[0].id_referral;
+                        const {tap} = data[0].id_referral;
                         const fara1 = `SELECT  id AS id_referred FROM users WHERE email = '${req.body[0].email}'`
                         db.query(fara1, (err, data) => {
                             if (err) {
                                 console.log(err)
                             } else {
                                 //  tap = res.send(data)
-                                const tap1 = data[0].id_referred;
+                                const {tap1} = data[0].id_referred;
                                 const fara2 = `INSERT INTO referrals(referral_user_id,referred_user_id) VALUES ('${tap}', '${tap1}')`
 
                                 db.query(fara2, (err, data) => {

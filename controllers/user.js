@@ -20,7 +20,7 @@ const withdrawalFromMainWallet = (req, res) => {
     const amountP = "INSERT INTO withdrawal(main_amount,withdrawal_amount,account_name,account_no,withdrawal_user_id) VALUES (?)"
     db.query(amountP,[feed],(err,data)=>{
         if(err){
-            res.status(500).json({err:err})
+            console.error(err)
         }else{
 
             res.status(200).json({msg:"The successful withdrawal request will be processed within 24 hours of upload."})
@@ -38,24 +38,24 @@ const TransferToMainWallet = (req, res) => {
     const amountP = "INSERT INTO transfer(transfer_amount,user_transfer_id) VALUES (?)"
     db.query(amountP, [feed], (err, data) => {
         if (err) {
-            res.status(500).json({ err: err })
+          console.error(err)
         } else {
             const pa = `UPDATE main_wallet SET amount = "${pu}" WHERE main_wallet_id = "${req.body.id}"`
             db.query(pa, (err, result) => {
                 if (err) {
-                    res.status(501).json({ err: err })
+                   console.log(err)
                 } else {
                     const pas = `UPDATE affiliate_wallet SET amount = "${p1}" WHERE affiliate_id = "${req.body.id}"`
                     db.query(pas, (err, result) => {
                         if (err) {
-                            res.status(500).json({ err: err })
+                           console.error(err)
                         } else {
 
                             const yon = [`transfer`, `${req.body.amountTransferred}`, `${req.body.id}`, `success`]
                             const you = `INSERT INTO transactions(type,amount,transaction_id,status) VALUES (?)`
                             db.query(you, [yon], (err, result) => {
                                 if (err) {
-                                    res.status(500).json({ err: err })
+                                    console.log(err)
                                 } else {
                                     res.status(201).json({ msg: "Successful Transfer" })
                                 }
@@ -75,7 +75,7 @@ const getMainWallet = (req, res) => {
     const pad = `SELECT * FROM main_wallet WHERE main_wallet_id ="${pa}"`
     db.query(pad, (err, result) => {
         if (err) {
-            res.status(501).json({err:err})
+           console.error(err)
         } else {
             res.send(result)
             // console.log(result[0].amount)
@@ -89,44 +89,44 @@ const getAffiliateWallet = (req, res) => {
     const pad = `SELECT * FROM affiliate_wallet WHERE affiliate_id ="${pa}"`
     db.query(pad, (err, result) => {
         if (err) {
-            res.status(501).json({ err: err })
+        console.error(err)
         } else {
             res.send(result)
-            // console.log(result[0].amount)
+            
         }
     })
 }
 
 
-const subscription = (req, res) => {
+const subscription = (req,res) => {
 
     const wa = "INSERT INTO subscription(user_id,subscribe_amount,status,subscription_pay) VALUES (?)"
     const wa1 = [req.body.id, req.body.amount, "active",1]
     db.query(wa, [wa1], (err, result) => {
         if (err) {
-            res.status(501).json({ err: err })
+            console.error(err)
         }
         if (result) {
             const pa = `SELECT * FROM referrals WHERE referred_user_id ="${req.body.id}"`
             db.query(pa, (err, data) => {
                 if (err) {
-                    res.status(501).json({err:err})
+                 console.log(err)
                 }
-                if (data.length === 0) {
+                if(data.length === 0){
                     const mainWa = req.body.mainWallet;
                     const amount = req.body.amount;
                     const bal = parseInt(mainWa) - parseInt(amount)
                     const bal1 = `UPDATE main_wallet SET amount = "${bal}" WHERE main_wallet_id = "${req.body.id}"`
                     db.query(bal1, (err, result) => {
                         if (err) {
-                            res.status(501).json({ err: err })
+                           console.error(err)
                         } else {
 
                             const pad = [`subscription`, `${req.body.amount}`, `${req.body.id}`, `success`]
                             const trans1 = "INSERT INTO transactions(type,amount,transaction_id,status) VALUES (?)"
                             db.query(trans1, [pad], (err, result) => {
                                 if (err) {
-                                    res.status(501).json({ err: err })
+                                   console.log(err)
                                 } else {
                                     res.status(200).json({msg:"subscription was successfully"})
                                 }
@@ -142,20 +142,20 @@ const subscription = (req, res) => {
                     const bal2 = `UPDATE main_Wallet SET amount = "${bal}" WHERE main_Wallet_id = "${req.body.id}"`
                     db.query(bal2, (err, result) => {
                         if (err) {
-                            res.status(501).json({ err: err })
+                           console.log(err)
                         } else {
                             const tire = `UPDATE affiliate_wallet SET amount = amount + "${cad}" WHERE affiliate_id ="${data[0].referral_user_id}"`
                             db.query(tire, (err, result) => {
                                 if (err) {
-                                    res.status(501).json({ err: err })
+                                    console.log(err)
                                 } else {
                                     const pad = [`subscription`, `${req.body.amount}`, `${req.body.id}`, `success`]
                                     const trans1 = "INSERT INTO transactions(type,amount,transaction_id,status) VALUES (?)"
                                     db.query(trans1, [pad], (err, result) => {
                                         if (err) {
-                                            res.status(501).json({ err: err })
+                                          console.log(err)
                                         } else {
-                                            console.log("transaction insert successfully")
+                                            console.log("subscription was successfully")
                                         }
                                     })
                                 }
@@ -176,7 +176,7 @@ const subStatus =(req,res)=>{
     const to = `SELECT status FROM subscription WHERE user_id = "${po}"`
     db.query(to,(err,result)=>{
         if(err){
-            res.status(501).json({err:err})
+           console.error(err)
         }else{
             res.status(200).send(result)
         }
@@ -188,7 +188,7 @@ const getReferral = (req, res) => {
     const ba = `SELECT * FROM referrals WHERE referral_user_id ="${bas}"`
     db.query(ba, (err, result) => {
         if (err) {
-            res.json({ err: err })
+          console.error(err)
         } else {
             res.send(result)
         }
@@ -197,12 +197,12 @@ const getReferral = (req, res) => {
 
 
 const walletOverview = (req, res) => {
-    const para = req.params.id
-const tin = "SELECT * FROM transactions"
+    const pars = req.params.id
+const tin = `SELECT * FROM transactions WHERE transaction_id = "${pars}"`
     // const tim = `SELECT t1.d_amount,t1.created_at,t1.user_deposit_id, t2.transfer_amount,t2.created_at AS pep,t2.user_transfer_id, t3.withdrawal_amount,t3.withdrawal_date,t3.withdrawal_user_id FROM deposit AS t1 JOIN transfer AS t2 ON t1.user_deposit_id = t2.user_transfer_id JOIN withdrawal AS t3 ON t2.user_transfer_id = t3.withdrawal_user_id WHERE t1.user_deposit_id ="${para}"`;
     db.query(tin, (err, result) => {
         if (err) {
-            res.status(500).json({err:err})
+          console.error(err)
         } else {
             res.send(result)
         }
@@ -313,36 +313,36 @@ const getWithdrawal = (req, res) => {
 }
 
 const postDeposit = (req, res) => {
-    const dom = req.body
-     console.log(dom)
-    //  console.log(req.body.customer.name)
-    // const pop = [`${req.body[0].amount}`, `${req.body[1].name}`, `${req.body[0].id}`, `${req.body[1].email}`]
-    // const def = `INSERT INTO deposit(d_amount,d_name,user_deposit_id,email) VALUES (?)`
 
-    // db.query(def, [pop], (err, result) => {
-    //     if (err) {
-    //         console.log(err)
-    //     } else {
-    //         const bar = parseInt(req.body[0].mainA) + parseInt(req.body[0].amount)
-    //         const bars = `UPDATE main_wallet SET amount = "${bar}" WHERE main_wallet_id = "${req.body.id}"`
-    //         db.query(bars, (err, result) => {
-    //             if (err) {
-    //                 console.log(err)
-    //             } else {
-    //                 const pad = [`deposit`, `${req.body[0].amount}`, `${req.body[0].id}`, `success`]
-    //                 const trans = "INSERT INTO transactions(type,amount,transaction_id,status) VALUES (?)"
-    //                 db.query(trans, [pad], (err, result) => {
-    //                     if (err) {
-    //                         console.log(err)
-    //                     } else {
-    //                         console.log("transaction insert successfully")
-    //                     }
-    //                 })
 
-    //             }
-    //         })
-    //     }
-    // })
+     console.log(req.body.customer.name)
+    const pop = [`${req.body[0].amount}`, `${req.body[1].name}`, `${req.body[0].id}`, `${req.body[1].email}`]
+    const def = `INSERT INTO deposit(d_amount,d_name,user_deposit_id,email) VALUES (?)`
+
+    db.query(def, [pop], (err, result) => {
+        if (err) {
+            console.error(err)
+        } else {
+            const bar = parseInt(req.body[0].mainA) + parseInt(req.body[0].amount)
+            const bars = `UPDATE main_wallet SET amount = "${bar}" WHERE main_wallet_id = "${req.body.id}"`
+            db.query(bars, (err, result) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    const pad = [`deposit`, `${req.body[0].amount}`, `${req.body[0].id}`, `success`]
+                    const trans = "INSERT INTO transactions(type,amount,transaction_id,status) VALUES (?)"
+                    db.query(trans, [pad], (err, result) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                        res.send("Successful Deposit")
+                        }
+                    })
+
+                }
+            })
+        }
+    })
 }
 
 const getGameNo = (req, res) => {
