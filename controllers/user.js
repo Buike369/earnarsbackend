@@ -302,7 +302,7 @@ const getInactiveUser1 = (req, res) => {
 }
 
 const getTotalDeposit = (req, res) => {
-    const totalD = "SELECT COUNT(d_amount) AS total_deposit FROM deposit"
+    const totalD = "SELECT SUM(d_amount) AS total_deposit FROM deposit"
     db.query(totalD, (err, result) => {
         if (err) {
             console.log(err)
