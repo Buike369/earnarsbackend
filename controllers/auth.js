@@ -247,14 +247,11 @@ const resetPassword = async (req, res) => {
 
     const peo = `UPDATE users SET  password = "${hash}" WHERE email ="${pal}"`
     db.query(peo, async (err, result) => {
-        if (err) {
-            // res.status(500).json({
-            //     err:err
+        if (err){
             console.log(err)
-            // })
         } else {
             console.log("success")
-            res.status(201).json({ msg: "Successful Update" })
+            res.status(201).json({ msg: "Password Updated Successfully" })
         }
     })
 }
