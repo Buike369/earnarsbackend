@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const { getActiveUser, getSubscriptionPay, subStatus, getReferral, walletOverview, getAffiliateWallet, subscription, getMainWallet, TransferToMainWallet , DeleteGame3, DeleteGame, DeleteGame2, DeleteGame1, getGameNo3, getGameNo2, getGameNo1, getActiveUser1, getGameNo, getInactiveUser1, getUserInfo, postDeposit, withdrawalFromMainWallet, getWithdrawal } = require("../controllers/user.js")
+const { getActiveUser, getTotalDeposit, getSubscriptionPay, subStatus, getReferral, walletOverview, getAffiliateWallet, subscription, getMainWallet, TransferToMainWallet , DeleteGame3, DeleteGame, DeleteGame2, DeleteGame1, getGameNo3, getGameNo2, getGameNo1, getActiveUser1, getGameNo, getInactiveUser1, getUserInfo, postDeposit, withdrawalFromMainWallet, getWithdrawal } = require("../controllers/user.js")
 
 router.get("/active-user", getActiveUser);
 router.get("/active-count", getActiveUser1);
 router.get("/inactive-count", getInactiveUser1);
 router.get("/subscription-pay/:id", getSubscriptionPay);
 router.get("/withdrawal", getWithdrawal);
+router.get("/totalDeposit", getTotalDeposit);
 router.get("/sports/game-no", getGameNo);
 router.get("/main-wallet/:id", getMainWallet);
 router.get("/subscription-status/:id", subStatus);

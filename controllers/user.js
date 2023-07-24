@@ -276,9 +276,9 @@ const getSubscriptionPay = (req, res) => {
 const getActiveUser1 = (req, res) => {
     const activeUser = "SELECT COUNT(*) AS active_count FROM users WHERE active = 1"
     db.query(activeUser, (err, result) => {
-        if (err) {
+        if (err){
             console.log(err)
-        } else {
+        } else{
             res.json(result)
            
         }
@@ -295,6 +295,20 @@ const getInactiveUser1 = (req, res) => {
         } else {
             res.json(result)
            
+        }
+
+    })
+
+}
+
+const getTotalDeposit = (req, res) => {
+    const totalD = "SELECT COUNT(d_amount) AS total_deposit FROM deposit"
+    db.query(totalD, (err, result) => {
+        if (err) {
+            console.log(err)
+        } else {
+            res.json(result)
+
         }
 
     })
@@ -485,7 +499,7 @@ const runJob = () => {
 // runJob();
 
 module.exports = {
-    getActiveUser, getSubscriptionPay, subStatus, getReferral, walletOverview, getAffiliateWallet, getMainWallet, subscription, DeleteGame, TransferToMainWallet, DeleteGame3, DeleteGame2, DeleteGame1, getGameNo3, getGameNo2, getGameNo1, getGameNo, getActiveUser1, getInactiveUser1, postDeposit, getUserInfo, runJob, withdrawalFromMainWallet, getWithdrawal
+    getActiveUser, getTotalDeposit, getSubscriptionPay, subStatus, getReferral, walletOverview, getAffiliateWallet, getMainWallet, subscription, DeleteGame, TransferToMainWallet, DeleteGame3, DeleteGame2, DeleteGame1, getGameNo3, getGameNo2, getGameNo1, getGameNo, getActiveUser1, getInactiveUser1, postDeposit, getUserInfo, runJob, withdrawalFromMainWallet, getWithdrawal
 }
 
 // runJob();
