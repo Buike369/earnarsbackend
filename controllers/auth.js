@@ -109,12 +109,13 @@ const register =  (req, res) => {
         const q = "SELECT * FROM users WHERE email = ?"
         db.query(q, [email],(err,data) => {
             if (err) {
-                console.error(err)
+                res.status(501).json({
+                    msg: "internal server error"
+                })
             }
             if (data.length > 0){
                 return res.send('User already exist')
-            }
-            
+            }else{
                 // Hash the password and create a user
                 const salt = bcrypt.genSaltSync(10);
                 const hash = bcrypt.hashSync(req.body.password, salt);
@@ -123,13 +124,33 @@ const register =  (req, res) => {
                 const values = [req.body.username, req.body.email, hash, referralCode]
                 db.query(qa, [values], (err, data) => {
                     if (err) {
-                        console.error(err)
+                        res.status(500).json({
+                            msg: "internal server error"
+                        })
                     } else {
                         res.json("user has been created")
                     }
 
-
                 })
+            }
+            
+                // Hash the password and create a user
+                // const salt = bcrypt.genSaltSync(10);
+                // const hash = bcrypt.hashSync(req.body.password, salt);
+                // const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
+                
+
+                // const values = [req.body.username, req.body.email, hash, referralCode]
+                // db.query(qa, [values], (err, data) => {
+                //     if (err) {
+                //         res.status(500).json({
+                //             msg: "internal server error"
+                //         })
+                //     } else {
+                //         res.json("user has been created")
+                //     }
+
+                // })
             
         })
         
