@@ -114,7 +114,7 @@ const register =  (req, res) => {
                 })
             }
             if (data.length > 0){
-                return res.send('User already exist')
+                return res.json('User already exist')
             }else{
                 // Hash the password and create a user
                 const salt = bcrypt.genSaltSync(10);
