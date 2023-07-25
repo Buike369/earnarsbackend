@@ -125,7 +125,7 @@ const register =  (req, res) => {
                     if (err) {
                         console.error(err)
                     } else {
-                        console.log("user has been created")
+                        res.json("user has been created")
                     }
 
 
