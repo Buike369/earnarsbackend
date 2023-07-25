@@ -31,7 +31,7 @@ function generateReferralCode(length) {
     return result;
 }
 
-const register1 = async (req, res) => {
+const register1 =(req, res) => {
 
     const checkV = req.body[1].code;
     // CHECK EXISTING USER
@@ -42,7 +42,7 @@ const register1 = async (req, res) => {
 
     if (p2 === true) {
         const q = "SELECT * FROM users WHERE email = ?"
-        db.query(q, [email], async (err, data) => {
+        db.query(q, [email],(err, data) => {
             if (err) {
                console.error(err)
             }
@@ -50,8 +50,8 @@ const register1 = async (req, res) => {
         })
 
         // Hash the password and create a user
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(req.body[0].password, salt);
+        const salt =  bcrypt.genSaltSync(10);
+        const hash =  bcrypt.hashSync(req.body[0].password, salt);
 
         const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
 
@@ -100,14 +100,14 @@ const register1 = async (req, res) => {
 
 }
 
-const register = async (req, res) => {
+const register =  (req, res) => {
     // CHECK EXISTING USER
     const email = req.body.email;
     const p1 = validator.validate(`${email}`)
     const referralCode = generateReferralCode(8);
     if (p1 === true) {
         const q = "SELECT * FROM users WHERE email = ?"
-        db.query(q, [email], async (err,data) => {
+        db.query(q, [email],(err,data) => {
             if (err) {
                 console.error(err)
             }
@@ -116,8 +116,8 @@ const register = async (req, res) => {
             }
             
                 // Hash the password and create a user
-                const salt = await bcrypt.genSalt(10);
-                const hash = await bcrypt.hash(req.body.password, salt);
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(req.body.password, salt);
                 const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
 
                 const values = [req.body.username, req.body.email, hash, referralCode]
@@ -146,17 +146,17 @@ const adminRegister = (req, res) => {
 
 }
 
-const login = async (req, res) => {
+const login = (req, res) => {
     // CHECK USER
     const q = "SELECT * FROM users WHERE email = ?"
-    db.query(q, [req.body.email], async (err, data) => {
+    db.query(q, [req.body.email],(err, data) => {
         if (err) {
             console.log(err)
         }
         if (data.length === 0) return res.status(404).json({ msg: "user not found" });
 
         //CHECK FOR PASSWORD
-        const isPasswordCorrect = await bcrypt.compare(req.body.password, data[0].password);
+        const isPasswordCorrect = bcrypt.compareSync(req.body.password, data[0].password);
         if (!isPasswordCorrect) return res.status(400).json({ msg: "Wrong email or Password!" })
         const token = jwt.sign({ id: data[0].id }, "jwtkey")
         const { password, ...other } = data[0];
