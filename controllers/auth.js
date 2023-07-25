@@ -5,6 +5,8 @@ const nodemailer = require('nodemailer');
 const { EMAIL, PASSWORD } = require("../env.js")
 const Mailgen = require('mailgen')
 var validator = require("email-validator");
+const passport = require("passport")
+const GoogleStrategy = require("passport-google-oauth20").Strategy
 
 
 // const generateToken = () => {
