@@ -12,6 +12,7 @@ const {db} = require('./db.js')
 const bcrypt = require('bcrypt')
 const session = require('express-session')
 const passport = require("passport")
+const bodyParser = require('body-parser')
 const GoogleStrategy = require("passport-google-oauth20").Strategy
 
 
@@ -29,63 +30,59 @@ function generateReferralCode(length) {
 const referralCode = generateReferralCode(8);
 const port = process.env.PORT || 8080
 app.use(express.json())
-app.use(session({
-  secret:"your-secret-key", resave:true, saveUninitialized:true
-}))
-app.use(passport.initialize());
-app.use(passport.session());
-passport.serializeUser((user,done)=>{
-  done(null,user);
-})
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+
+
+
 
 passport.use(new GoogleStrategy({
   clientID:"451426581815-ms0de6c6i4mk58d9k5d3e44q9ipqufq7.apps.googleusercontent.com",
   clientSecret:"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",
   callbackUrl:"https://tea.earnars.com/auth/google/callback"
 },
-async (accessToken,refreshToken,Profile,done)=>{
-  try{
-const user ={
- id:Profile.id,
- name:Profile.displayName,
- email:Profile.emails[0].value,
- password:Profile.password
-};
-    const pr = "SELECT * FROM users WHERE email = ?"
-    db.query(pr, [user.email], (err, data) => {
-      if (err) {
-      console.log(err)
-      }
-      if (data.length > 0) {
-        return res.json('User already exist')
-      } else {
-        // Hash the password and create a user
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(user.password, salt);
-        const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
+(accessToken,refreshToken,Profile,done)=>{
+//   try{
+// const user ={
+//  id:Profile.id,
+//  name:Profile.displayName,
+//  email:Profile.emails[0].value,
+//  password:Profile.password
+// };
+//     const pr = "SELECT * FROM users WHERE email = ?"
+//     db.query(pr, [user.email], (err, data) => {
+//       if (err) {
+//       console.log(err)
+//       }
+//       if (data.length > 0) {
+//         return res.json('User already exist')
+//       } else {
+//         // Hash the password and create a user
+//         const salt = bcrypt.genSaltSync(10);
+//         const hash = bcrypt.hashSync(user.password, salt);
+//         const qa = "INSERT INTO users(`username`,`email`,`password`,`referral_code`) VALUES (?)"
 
-        const values = [user.name, user.email, hash, referralCode]
-        db.query(qa, [values], (err, data) => {
-          if (err) {
-          console.log(err)
-          } else {
-            res.json("user has been created")
-          }
+//         const values = [user.name, user.email, hash, referralCode]
+//         db.query(qa, [values], (err, data) => {
+//           if (err) {
+//           console.log(err)
+//           } else {
+//             res.json("user has been created")
+//           }
 
-        })
-      }
+//         })
+//       }
 
 
-    })
-    return done(null,user)
+//     })
+//     return done(null,user)
     
-  }catch(error){
-     return done(error)
-  }
+//   }catch(error){
+//      return done(error)
+//   }
+console.log(Profile)
+return done(null, Profile)
 }))
 
 var allowedOrigins = [
@@ -130,6 +127,12 @@ app.get("https://tea.earnars.com/auth/google/callback",passport.authenticate('go
   successRedirect: '/',
   failureRedirect: '/',
 }))
+
+app.post('https://tea.earnars.com/auth/google',(req,res)=>{
+  const idToken = req.body.tokenId;
+  console.log(idToken)
+}
+)
 
 
 app.listen(port,()=>{
