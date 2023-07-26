@@ -37,12 +37,12 @@ app.use(bodyParser.json())
 
 
 
-passport.use(new GoogleStrategy({
-  clientID:"451426581815-ms0de6c6i4mk58d9k5d3e44q9ipqufq7.apps.googleusercontent.com",
-  clientSecret:"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",
-  callbackUrl:"https://tea.earnars.com/auth/google/callback"
-},
-(accessToken,refreshToken,Profile,done)=>{
+// passport.use(new GoogleStrategy({
+//   clientID:"451426581815-ms0de6c6i4mk58d9k5d3e44q9ipqufq7.apps.googleusercontent.com",
+//   clientSecret:"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",
+//   callbackUrl:"http://localhost:8080/auth/google/callback"
+// },
+// (accessToken,refreshToken,Profile,done)=>{
 //   try{
 // const user ={
 //  id:Profile.id,
@@ -81,9 +81,9 @@ passport.use(new GoogleStrategy({
 //   }catch(error){
 //      return done(error)
 //   }
-console.log(Profile)
-return done(null, Profile)
-}))
+// console.log(Profile)
+// return done(null, Profile)
+// }))
 
 var allowedOrigins = [
   "http://localhost:3000",
@@ -121,14 +121,14 @@ app.use("/api/user",userRoutes)
 app.use("/api/post",postRoutes)
 app.use("/api/flutterwave", paymentRoutes)
 
-app.get('https://tea.earnars.com/auth/google',passport.authenticate('google',{ scope: ['profile', 'email']}))
+// app.get('/auth/google',passport.authenticate('google',{ scope: ['profile', 'email']}))
 
-app.get("https://tea.earnars.com/auth/google/callback",passport.authenticate('google',{
-  successRedirect: '/',
-  failureRedirect: '/',
-}))
+// app.get("/auth/google/callback",passport.authenticate('google',{
+//   successRedirect: '/',
+//   failureRedirect: '/',
+// }))
 
-app.post('https://tea.earnars.com/auth/google',(req,res)=>{
+app.post('/auth/google',(req,res)=>{
   const idToken = req.body.tokenId;
   console.log(idToken)
 }

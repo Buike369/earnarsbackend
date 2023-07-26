@@ -217,6 +217,8 @@ const forgotPassword = (req, res) => {
                 res.status(404).json({ msg: 'User not found' });
             } else {
                 const token1 = generateReferralCode(8);
+                const accessTOKEN =results[0].referral_code
+                console.log(accessTOKEN)
                 const mailOptions = {
                     from: EMAIL,
                     to: email1,
@@ -232,7 +234,7 @@ const forgotPassword = (req, res) => {
 <h1 style={{marginBottom:"10px"}}>Reset password</h1>
 <p style={{marginBottom:"20px"}}>A password change has been requested for your account. If this was you, please use the link below to reset your password.</p>
 
-<a href ="https://earnars.com/resetpassword/${email1}" style={{padding:"8px 5px",background:"green",color:"#fff"}}>Reset password</a>
+<a href ="https://earnars.com/resetpassword#@7890abch!uitrm$y/${accessTOKEN}" style={{padding:"8px 5px",background:"green",color:"#000"}}>Reset password</a>
 </body>
 </ > `
                 };
@@ -261,15 +263,16 @@ const forgotPassword = (req, res) => {
 }
 
 
-const resetPassword = async (req, res) => {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(req.body.password, salt);
+const resetPassword =  (req, res) => {
+
+    const salt =  bcrypt.genSaltSync(10);
+    const hash =  bcrypt.hashSync(req.body.password, salt);
     const pal = req.params.id
 
     // console.log(req.body)
 
-    const peo = `UPDATE users SET  password = "${hash}" WHERE email ="${pal}"`
-    db.query(peo, async (err, result) => {
+    const peo = `UPDATE users SET  password = "${hash}" WHERE referral ="${pal}"`
+    db.query(peo,(err, result) => {
         if (err){
             console.log(err)
         } else {
