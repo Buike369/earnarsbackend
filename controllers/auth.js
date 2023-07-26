@@ -234,7 +234,7 @@ const forgotPassword = (req, res) => {
 <h1 style={{marginBottom:"10px"}}>Reset password</h1>
 <p style={{marginBottom:"20px"}}>A password change has been requested for your account. If this was you, please use the link below to reset your password.</p>
 
-<a href ="https://earnars.com/resetpassword#@7890abch!uitrm$y/${accessTOKEN}" style={{padding:"8px 5px",background:"green",color:"#000"}}>Reset password</a>
+<a href ="https://earnars.com/resetpassword/${accessTOKEN}" style={{padding:"8px 5px",background:"green",color:"#000"}}>Reset password</a>
 </body>
 </ > `
                 };
