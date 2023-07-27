@@ -190,7 +190,7 @@ const addBinary = (req, res) => {
  }
 
 
- const updatePost =  (req,res)=>{
+ const updatePost = (req,res)=>{
   const regId = req.params.id;
    const pa = `UPDATE users SET  phone_number = '${req.body.phoneNumber}',country = '${req.body.country}',account_name = '${req.body.accountName}',account_number = '${req.body.accountNumber}',bank_name = '${req.body.bankName}' WHERE id = '${regId}'`
 

@@ -119,7 +119,7 @@ app.use((req,res,next)=>{
 app.use("/api/auth",authRoutes)
 app.use("/api/user",userRoutes)
 app.use("/api/post",postRoutes)
-app.use("/api/flutterwave", paymentRoutes)
+app.use("/api/flutterwave",paymentRoutes)
 
 // app.get('/auth/google',passport.authenticate('google',{ scope: ['profile', 'email']}))
 
