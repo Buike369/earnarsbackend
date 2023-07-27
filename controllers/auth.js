@@ -271,10 +271,11 @@ const resetPassword =  (req, res) => {
 
     // console.log(req.body)
 
-    const peo = `UPDATE users SET  password = "${hash}" WHERE referral ="${pal}"`
+    const peo = `UPDATE users SET  password = "${hash}" WHERE referral_code ="${pal}"`
     db.query(peo,(err, result) => {
         if (err){
             console.log(err)
+            res.json(err)
         } else {
             console.log("success")
             res.status(201).json({ msg: "Password Updated Successfully" })
