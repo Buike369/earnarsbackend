@@ -9,22 +9,22 @@ const mysql = require('mysql')
    
 })
 
-db.getConnection((err,connection)=>{
-   if(err){
-      console.log(err)
-   }else{
-      const pat = "ALTER TABLE users MODIFY COLUMN account_number VARCHAR(20)"
-      db.query(pat, (err, result) => {
-         if (err) {
-            console.log(err)
-         }else{
+// db.getConnection((err,connection)=>{
+//    if(err){
+//       console.log(err)
+//    }else{
+//       const pat = "ALTER TABLE users MODIFY COLUMN account_number VARCHAR(20)"
+//       db.query(pat, (err, result) => {
+//          if (err) {
+//             console.log(err)
+//          }else{
 
-            return console.log("table created")
-         }
-      })
-      connection.release();
-   }
-})
+//             return console.log("table created")
+//          }
+//       })
+//       connection.release();
+//    }
+// })
 
 module.exports = {db}
 
