@@ -284,7 +284,8 @@ const resetPassword =  (req, res) => {
              res.json(err)
          } else {
              console.log("success")
-             res.status(201).json({ msg: "Password Updated Successfully" })
+            //  res.status(201).json({ msg: "Password Updated Successfully"})
+             res.status(201).json({ msg: idReg })
          }
      })
  }
