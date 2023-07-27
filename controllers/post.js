@@ -196,6 +196,7 @@ const addBinary = (req, res) => {
 
   db.query(pa,(err,data)=>{
     if(err){
+      res.json(err)
         console.log(err)
     }else{
      res.send(data)
