@@ -193,7 +193,7 @@ const addBinary = (req, res) => {
  const updatePost = (req,res)=>{
   const regId = req.params.id;
    const accNum = req.body.accountNumber.toString()
-  console.log(req.body)
+ 
    const pa = `UPDATE users SET  phone_number = '${req.body.phoneNumber}',country = '${req.body.country}',account_name = '${req.body.accountName}',account_number = '${accNum}',bank_name = '${req.body.bankName}' WHERE id = '${regId}'`
 
   db.query(pa,(err,data)=>{
