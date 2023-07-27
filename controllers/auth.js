@@ -277,7 +277,6 @@ const resetPassword =  (req, res) => {
     res.status(502).json(err)
  }else{
     const idReg = result[0].id
-     res.send(idReg)
      const peo = `UPDATE users SET  password = "${hash}" WHERE referral_code ="${idReg}"`
      db.query(peo, (err, result) => {
          if (err) {
