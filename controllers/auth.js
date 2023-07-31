@@ -165,7 +165,66 @@ const register =  (req, res) => {
 }
 
 const adminRegister = (req, res) => {
+    // CHECK EXISTING USER
+    const email = req.body.email;
+    const p1 = validator.validate(`${email}`)
+  
+    if (p1 === true) {
+        const q = "SELECT * FROM admin WHERE email = ?"
+        db.query(q, [email], (err, data) => {
+            if (err) {
+                res.status(501).json({
+                    msg: "internal server error"
+                })
+            }
+            if (data.length > 0) {
+                return res.json('User already exist')
+            } else {
+                // Hash the password and create a user
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(req.body.password, salt);
+                const qa = "INSERT INTO admin(admin_name, admin_email, admin_password) VALUES (?)"
 
+                const values = [req.body.username, req.body.email, hash]
+                db.query(qa, [values], (err, data) => {
+                    if (err) {
+                        res.status(500).json({
+                            msg: "internal server error"
+                        })
+                    } else {
+                        res.json("user has been created")
+                    }
+
+                })
+            }
+
+        })
+
+
+    } else {
+        res.status(402).json({
+            msg: "email is not valid"
+        })
+    }
+}
+
+const adminLogin = (req, res) => {
+    // CHECK USER
+    const q = "SELECT * FROM admin WHERE email = ?"
+    db.query(q, [req.body.email], (err, data) => {
+        if (err) {
+            console.log(err)
+        }
+        if (data.length === 0) return res.status(404).json({ msg: "user not found" });
+
+        //CHECK FOR PASSWORD
+        const isPasswordCorrect = bcrypt.compareSync(req.body.password, data[0].password);
+        if (!isPasswordCorrect) return res.status(400).json({ msg: "Wrong email or Password!" })
+        const token = jwt.sign({ id: data[0].id }, "jwtkey")
+        const { password,id, ...other } = data[0];
+        res.cookie("access_token", token, { httpOnly: true }).status(200).json(other)
+
+    })
 
 }
 
@@ -303,4 +362,4 @@ const logout = (req, res) => {
 
 }
 
-module.exports = { register, adminRegister, resetPassword, register1, login, logout, forgotPassword }
+module.exports = { register, adminLogin , adminRegister, resetPassword, register1, login, logout, forgotPassword }
